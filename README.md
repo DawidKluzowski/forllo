@@ -1,2 +1,1 @@
-# forllo
-like trello but one more
+Node version: v20.9.0
