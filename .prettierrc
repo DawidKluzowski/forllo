@@ -5,6 +5,5 @@
     "singleQuote": true,
     "printWidth": 80,
     "endOfLine": "auto",
-    "plugins": ["prettier-plugin-tailwindcss"],
-    "extends": ["next", "prettier"]
+    "plugins": ["prettier-plugin-tailwindcss"]
 }
