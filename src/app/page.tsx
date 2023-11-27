@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { AcivitiesList } from '@/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { addActivityList } from './GlobalRedux/Features/activity';
+import {
+    addActivityList,
+    removeActivityList,
+} from './GlobalRedux/Features/activity';
 import { RootState } from './GlobalRedux/store';
 
 export default function Home() {
@@ -14,7 +17,9 @@ export default function Home() {
     );
     const dispatch = useDispatch();
 
-    const removeTable = (id: string) => {};
+    const removeTable = (id: string) => {
+        dispatch(removeActivityList(id));
+    };
 
     const addTable = () => {
         const newTable: AcivitiesList = {

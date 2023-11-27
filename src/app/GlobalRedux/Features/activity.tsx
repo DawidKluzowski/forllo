@@ -32,25 +32,19 @@ export const activityListSlice = createSlice({
     name: 'activityList',
     initialState,
     reducers: {
-        // addActivity: (state, action) => {
-        //     state.map((activitiesList) =>
-        //         activitiesList.activities.push(action.payload)
-        //     );
-        // },
+        //ADD TYPES
         addActivityList: (state, action) => {
             state.push(action.payload);
         },
-        // removeAcivityList: (
-        //     state,
-        //     action: PayloadAction<{ AcivitiesList }>
-        // ) => {
-        //     state.activitiesLists.filter(
-        //         (activityList) => activityList.id !== action.payload
-        //     );
-        // },
+        removeActivityList: (state, action) => {
+            return state.filter(
+                (actionLists) => actionLists.id !== action.payload
+            );
+        },
     },
 });
 
-export const { addActivityList } = activityListSlice.actions;
+export const { addActivityList, removeActivityList } =
+    activityListSlice.actions;
 
 export default activityListSlice.reducer;
