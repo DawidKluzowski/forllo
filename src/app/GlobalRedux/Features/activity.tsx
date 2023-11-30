@@ -1,6 +1,6 @@
 'use client';
 
-import { AcivitiesList } from '@/types';
+import { AcivitiesList, Activity } from '@/types';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -32,19 +32,31 @@ export const activityListSlice = createSlice({
     name: 'activityList',
     initialState,
     reducers: {
-        //ADD TYPES
-        addActivityList: (state, action) => {
+        addActivityList: (state, action: PayloadAction<AcivitiesList>) => {
             state.push(action.payload);
         },
-        removeActivityList: (state, action) => {
+        removeActivityList: (state, action: PayloadAction<string>) => {
             return state.filter(
                 (actionLists) => actionLists.id !== action.payload
             );
         },
+        addActivity: (
+            state,
+            action: PayloadAction<{ id: string; activityName: string }>
+        ) => {
+            const newActivity: Activity = {
+                id: uuidv4(),
+                name: action.payload.activityName,
+                description: 'do zmiany potem',
+            };
+            state
+                .find((qwe) => qwe.id === action.payload.id)
+                ?.activities.push(newActivity);
+        },
     },
 });
 
-export const { addActivityList, removeActivityList } =
+export const { addActivityList, removeActivityList, addActivity } =
     activityListSlice.actions;
 
 export default activityListSlice.reducer;

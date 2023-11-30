@@ -22,6 +22,8 @@ import {
     FormDescription,
     FormMessage,
 } from '../ui/form';
+import { addActivity } from '@/app/GlobalRedux/Features/activity';
+import { useDispatch } from 'react-redux';
 
 interface ActivityListProps {
     activitiesList: AcivitiesList;
@@ -32,11 +34,9 @@ const formSchema = z.object({
     activityName: z.string().min(2).max(50),
 });
 
-const ActivityList = ({
-    activitiesList: table,
-    removeTable,
-}: ActivityListProps) => {
+const ActivityList = ({ activitiesList, removeTable }: ActivityListProps) => {
     const [isEdit, setIsEdit] = useState(false);
+    const dispatch = useDispatch();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -45,20 +45,25 @@ const ActivityList = ({
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        dispatch(
+            addActivity({
+                id: activitiesList.id,
+                activityName: values.activityName,
+            })
+        );
     };
 
     return (
-        <Card className="w-48 bg-slate-500">
+        <Card className="w-[1370px] flex-1 flex-grow">
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>
-                    <span className="text-lg">{table.name}</span>
+                    <span className="text-lg">{activitiesList.name}</span>
                 </CardTitle>
                 <Button onClick={removeTable}>RM</Button>
                 <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
-                {table.activities.map((activity) => (
+                {activitiesList.activities.map((activity) => (
                     <div key={activity.id}>{activity.name}</div>
                 ))}
             </CardContent>

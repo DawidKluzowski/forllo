@@ -31,8 +31,8 @@ export default function Home() {
     };
 
     return (
-        <main className="flex min-h-screen flex-col gap-5 p-24">
-            <div className="flex gap-8 bg-fuchsia-400">
+        <main className=" min-w-screen min-h-screen ">
+            <div className="flex flex-nowrap gap-8 overflow-auto whitespace-nowrap bg-fuchsia-400 ">
                 {activitysLists.map((activity) => {
                     return (
                         <ActivityList

@@ -3,7 +3,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import activityListReducer from './Features/activity';
 
 const rootReducer = combineReducers({
-    //add all your reducers here
     acvivitiesLists: activityListReducer,
 });
 
