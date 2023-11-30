@@ -3,7 +3,6 @@ import { Button } from '../ui/button';
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
@@ -24,6 +23,8 @@ import {
 } from '../ui/form';
 import { addActivity } from '@/app/GlobalRedux/Features/activity';
 import { useDispatch } from 'react-redux';
+import { IoClose } from 'react-icons/io5';
+import { MdEdit } from 'react-icons/md';
 
 interface ActivityListProps {
     activitiesList: AcivitiesList;
@@ -31,7 +32,7 @@ interface ActivityListProps {
 }
 
 const formSchema = z.object({
-    activityName: z.string().min(2).max(50),
+    activityName: z.string().min(1).max(50),
 });
 
 const ActivityList = ({ activitiesList, removeTable }: ActivityListProps) => {
@@ -54,22 +55,36 @@ const ActivityList = ({ activitiesList, removeTable }: ActivityListProps) => {
     };
 
     return (
-        <Card className="w-[1370px] flex-1 flex-grow">
+        <Card className="min-w-[370px] bg-gray-500">
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>
                     <span className="text-lg">{activitiesList.name}</span>
                 </CardTitle>
-                <Button onClick={removeTable}>RM</Button>
-                <CardDescription></CardDescription>
+                <a className="cursor-pointer text-xl" onClick={removeTable}>
+                    <IoClose />
+                </a>
             </CardHeader>
-            <CardContent>
+            <CardContent className="w-full">
                 {activitiesList.activities.map((activity) => (
-                    <div key={activity.id}>{activity.name}</div>
+                    <div
+                        className="mb-2 flex w-full justify-between rounded-lg bg-gray-600 p-2 "
+                        key={activity.id}
+                    >
+                        <span>{activity.name}</span>
+                        <a className=" cursor-pointer text-xl">
+                            <MdEdit />
+                        </a>
+                    </div>
                 ))}
             </CardContent>
             <CardFooter>
                 {!isEdit ? (
-                    <Button onClick={() => setIsEdit(true)}>+</Button>
+                    <Button
+                        className="w-[340px]"
+                        onClick={() => setIsEdit(true)}
+                    >
+                        + Add Activity
+                    </Button>
                 ) : (
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -78,10 +93,10 @@ const ActivityList = ({ activitiesList, removeTable }: ActivityListProps) => {
                                 name="activityName"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>asd</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="activity"
+                                                className="w-[320px]"
+                                                placeholder="Name this activity"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -92,11 +107,16 @@ const ActivityList = ({ activitiesList, removeTable }: ActivityListProps) => {
                                     </FormItem>
                                 )}
                             />
-                            <div className="flex">
-                                <Button type="submit">Add Activity</Button>
-                                <Button onClick={() => setIsEdit(false)}>
-                                    x
+                            <div className="flex items-center">
+                                <Button className="mr-4" type="submit">
+                                    Add Activity
                                 </Button>
+                                <a
+                                    className="cursor-pointer text-xl"
+                                    onClick={() => setIsEdit(false)}
+                                >
+                                    <IoClose />
+                                </a>
                             </div>
                         </form>
                     </Form>

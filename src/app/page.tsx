@@ -31,8 +31,8 @@ export default function Home() {
     };
 
     return (
-        <main className=" min-w-screen min-h-screen ">
-            <div className="flex flex-nowrap gap-8 overflow-auto whitespace-nowrap bg-fuchsia-400 ">
+        <main className="container">
+            <div className="flex flex-nowrap gap-3 overflow-auto whitespace-nowrap pt-8 ">
                 {activitysLists.map((activity) => {
                     return (
                         <ActivityList
@@ -42,9 +42,9 @@ export default function Home() {
                         />
                     );
                 })}
-                <div className=" bg-green-600">
-                    <Button onClick={addTable}>Add Table</Button>
-                </div>
+                <Button className="min-w-[340px]" onClick={addTable}>
+                    + Add Table
+                </Button>
             </div>
         </main>
     );
