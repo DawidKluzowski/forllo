@@ -4,7 +4,7 @@ export interface Activity {
     description: string;
 }
 
-export interface AcivitiesList {
+export interface Boards {
     id: string;
     name: string;
     activities: Activity[];

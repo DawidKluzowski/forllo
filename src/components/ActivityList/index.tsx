@@ -1,4 +1,4 @@
-import { AcivitiesList } from '@/types';
+import { Boards } from '@/types';
 import { Button } from '../ui/button';
 import {
     Card,
@@ -17,17 +17,16 @@ import {
     FormField,
     FormItem,
     FormControl,
-    FormLabel,
     FormDescription,
     FormMessage,
 } from '../ui/form';
-import { addActivity } from '@/app/GlobalRedux/Features/activity';
+import { addActivity, removeActivity } from '@/app/GlobalRedux/Features/boards';
 import { useDispatch } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
 import { MdEdit } from 'react-icons/md';
 
 interface ActivityListProps {
-    activitiesList: AcivitiesList;
+    boards: Boards;
     removeTable: () => void;
 }
 
@@ -35,7 +34,7 @@ const formSchema = z.object({
     activityName: z.string().min(1).max(50),
 });
 
-const ActivityList = ({ activitiesList, removeTable }: ActivityListProps) => {
+const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
     const [isEdit, setIsEdit] = useState(false);
     const dispatch = useDispatch();
     const form = useForm<z.infer<typeof formSchema>>({
@@ -48,8 +47,18 @@ const ActivityList = ({ activitiesList, removeTable }: ActivityListProps) => {
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         dispatch(
             addActivity({
-                id: activitiesList.id,
+                boardId: boards.id,
                 activityName: values.activityName,
+            })
+        );
+        setIsEdit(false);
+        form.reset();
+    };
+
+    const onRemoveActivity = (activityId: string) => {
+        dispatch(
+            removeActivity({
+                activityId: activityId,
             })
         );
     };
@@ -58,20 +67,23 @@ const ActivityList = ({ activitiesList, removeTable }: ActivityListProps) => {
         <Card className="min-w-[370px] bg-gray-500">
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle>
-                    <span className="text-lg">{activitiesList.name}</span>
+                    <span className="text-lg">{boards.name}</span>
                 </CardTitle>
                 <a className="cursor-pointer text-xl" onClick={removeTable}>
                     <IoClose />
                 </a>
             </CardHeader>
             <CardContent className="w-full">
-                {activitiesList.activities.map((activity) => (
+                {boards.activities.map((activity) => (
                     <div
                         className="mb-2 flex w-full justify-between rounded-lg bg-gray-600 p-2 "
                         key={activity.id}
                     >
                         <span>{activity.name}</span>
-                        <a className=" cursor-pointer text-xl">
+                        <a
+                            onClick={() => onRemoveActivity(activity.id)}
+                            className=" cursor-pointer text-xl"
+                        >
                             <MdEdit />
                         </a>
                     </div>
