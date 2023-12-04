@@ -1,6 +1,6 @@
 'use client';
 
-import ActivityList from '@/components/ActivityList';
+import Board from '@/components/Board';
 import { Button } from '@/components/ui/button';
 import { Boards } from '@/types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,7 +30,7 @@ export default function Home() {
             <div className="flex flex-nowrap gap-3 overflow-auto whitespace-nowrap pt-8 ">
                 {boards.map((board) => {
                     return (
-                        <ActivityList
+                        <Board
                             removeTable={() => onRemoveBoard(board.id)}
                             key={board.id}
                             boards={board}
