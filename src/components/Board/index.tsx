@@ -24,6 +24,7 @@ import { addActivity, removeActivity } from '@/app/GlobalRedux/Features/boards';
 import { useDispatch } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
 import { MdEdit } from 'react-icons/md';
+import BoardNameInput from '../BoardNameInput';
 
 interface ActivityListProps {
     boards: Boards;
@@ -65,9 +66,9 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
 
     return (
         <Card className="min-w-[370px] bg-gray-500">
-            <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>
-                    <span className="text-lg">{boards.name}</span>
+            <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
+                <CardTitle className="w-full">
+                    <BoardNameInput boards={boards} />
                 </CardTitle>
                 <a className="cursor-pointer text-xl" onClick={removeTable}>
                     <IoClose />

@@ -70,10 +70,30 @@ export const boardsSlice = createSlice({
                 };
             });
         },
+        renameBoard: (
+            state,
+            action: PayloadAction<{ boardId: string; boardName: string }>
+        ) => {
+            return state.map((board) => {
+                if (board.id === action.payload.boardId) {
+                    return {
+                        ...board,
+                        name: action.payload.boardName,
+                    };
+                } else {
+                    return board;
+                }
+            });
+        },
     },
 });
 
-export const { addBoard, removeBoard, addActivity, removeActivity } =
-    boardsSlice.actions;
+export const {
+    addBoard,
+    removeBoard,
+    addActivity,
+    removeActivity,
+    renameBoard,
+} = boardsSlice.actions;
 
 export default boardsSlice.reducer;
