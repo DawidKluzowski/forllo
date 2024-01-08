@@ -1,3 +1,5 @@
+'use client';
+
 import { Boards } from '@/types';
 import { Button } from '../ui/button';
 import {
@@ -20,11 +22,11 @@ import {
     FormDescription,
     FormMessage,
 } from '../ui/form';
-import { addActivity, removeActivity } from '@/app/GlobalRedux/Features/boards';
+import { addActivity } from '@/app/GlobalRedux/Features/boards';
 import { useDispatch } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
-import { MdEdit } from 'react-icons/md';
 import BoardNameInput from '../BoardNameInput';
+import ActivityItem from '../ActivityItem';
 
 interface ActivityListProps {
     boards: Boards;
@@ -56,14 +58,6 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
         form.reset();
     };
 
-    const onRemoveActivity = (activityId: string) => {
-        dispatch(
-            removeActivity({
-                activityId: activityId,
-            })
-        );
-    };
-
     return (
         <Card className="min-w-[370px] bg-gray-500">
             <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
@@ -76,18 +70,7 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
             </CardHeader>
             <CardContent className="w-full">
                 {boards.activities.map((activity) => (
-                    <div
-                        className="mb-2 flex w-full justify-between rounded-lg bg-gray-600 p-2 "
-                        key={activity.id}
-                    >
-                        <span>{activity.name}</span>
-                        <a
-                            onClick={() => onRemoveActivity(activity.id)}
-                            className=" cursor-pointer text-xl"
-                        >
-                            <MdEdit />
-                        </a>
-                    </div>
+                    <ActivityItem key={activity.id} activity={activity} />
                 ))}
             </CardContent>
             <CardFooter>

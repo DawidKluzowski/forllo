@@ -45,13 +45,15 @@ export const boardsSlice = createSlice({
                 activityName: string;
             }>
         ) => {
+            const { boardId, activityName } = action.payload;
+
             const newActivity: Activity = {
                 id: uuidv4(),
-                name: action.payload.activityName,
+                name: activityName,
                 description: 'do zmiany potem',
             };
             state
-                .find((board) => board.id === action.payload.boardId)
+                .find((board) => board.id === boardId)
                 ?.activities.push(newActivity);
         },
         removeActivity: (
@@ -60,9 +62,11 @@ export const boardsSlice = createSlice({
                 activityId: string;
             }>
         ) => {
+            const { activityId } = action.payload;
+
             return state.map((board) => {
                 const updatedActivities = board.activities.filter(
-                    (activity) => activity.id !== action.payload.activityId
+                    (activity) => activity.id !== activityId
                 );
                 return {
                     ...board,
@@ -75,15 +79,39 @@ export const boardsSlice = createSlice({
             action: PayloadAction<{ boardId: string; boardName: string }>
         ) => {
             return state.map((board) => {
-                if (board.id === action.payload.boardId) {
+                const { boardId, boardName } = action.payload;
+
+                if (board.id === boardId) {
                     return {
                         ...board,
-                        name: action.payload.boardName,
+                        name: boardName,
                     };
                 } else {
                     return board;
                 }
             });
+        },
+        changeActivityDescription: (
+            state,
+            action: PayloadAction<{
+                activityId: string;
+                activityDescription: string;
+            }>
+        ) => {
+            const { activityId, activityDescription } = action.payload;
+
+            //cos tu nie pykło
+
+            const updatedActivities = state.map((board) => {
+                const updatedActivity = board.activities.find((activity) => {
+                    activity.id === activityId;
+                });
+                if (updatedActivity) {
+                    updatedActivity.description = activityDescription;
+                }
+                return board;
+            });
+            return updatedActivities;
         },
     },
 });
@@ -94,6 +122,7 @@ export const {
     addActivity,
     removeActivity,
     renameBoard,
+    changeActivityDescription,
 } = boardsSlice.actions;
 
 export default boardsSlice.reducer;
