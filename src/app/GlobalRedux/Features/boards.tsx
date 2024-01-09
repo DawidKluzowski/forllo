@@ -1,7 +1,7 @@
 'use client';
 
 import { Boards, Activity } from '@/types';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialState: Boards[] = [
@@ -45,13 +45,15 @@ export const boardsSlice = createSlice({
                 activityName: string;
             }>
         ) => {
+            const { boardId, activityName } = action.payload;
+
             const newActivity: Activity = {
                 id: uuidv4(),
-                name: action.payload.activityName,
-                description: 'do zmiany potem',
+                name: activityName,
+                description: '',
             };
             state
-                .find((board) => board.id === action.payload.boardId)
+                .find((board) => board.id === boardId)
                 ?.activities.push(newActivity);
         },
         removeActivity: (
@@ -60,9 +62,11 @@ export const boardsSlice = createSlice({
                 activityId: string;
             }>
         ) => {
+            const { activityId } = action.payload;
+
             return state.map((board) => {
                 const updatedActivities = board.activities.filter(
-                    (activity) => activity.id !== action.payload.activityId
+                    (activity) => activity.id !== activityId
                 );
                 return {
                     ...board,
@@ -75,14 +79,36 @@ export const boardsSlice = createSlice({
             action: PayloadAction<{ boardId: string; boardName: string }>
         ) => {
             return state.map((board) => {
-                if (board.id === action.payload.boardId) {
+                const { boardId, boardName } = action.payload;
+
+                if (board.id === boardId) {
                     return {
                         ...board,
-                        name: action.payload.boardName,
+                        name: boardName,
                     };
                 } else {
                     return board;
                 }
+            });
+        },
+        changeActivityDescription: (
+            state,
+            action: PayloadAction<{
+                activityId: string;
+                activityDescription: string;
+            }>
+        ) => {
+            const { activityId, activityDescription } = action.payload;
+
+            state.map((board) => {
+                const updatedActivities = board.activities.map((activity) => {
+                    if (activity.id === activityId) {
+                        activity.description = activityDescription;
+                        return activity;
+                    }
+                    return activity;
+                });
+                return { ...board, activities: updatedActivities };
             });
         },
     },
@@ -94,6 +120,7 @@ export const {
     addActivity,
     removeActivity,
     renameBoard,
+    changeActivityDescription,
 } = boardsSlice.actions;
 
 export default boardsSlice.reducer;
