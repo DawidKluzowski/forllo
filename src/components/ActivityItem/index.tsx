@@ -24,7 +24,6 @@ import {
     FormField,
     FormItem,
     FormControl,
-    FormDescription,
     FormMessage,
 } from '../ui/form';
 import { useForm } from 'react-hook-form';
@@ -40,16 +39,10 @@ const formSchema = z.object({
 });
 
 const ActivityItem = ({ activity }: ActivityItemProps) => {
-    const [activityDescription, setActivityDescription] = useState(
-        activity.description
-    );
     const [isEditDescription, setIsEditDescription] = useState(false);
     const dispatch = useDispatch();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        // defaultValues: {
-        //     activityDescription: '',
-        // },
     });
 
     const onRemoveActivity = (activityId: string) => {
@@ -61,13 +54,17 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
     };
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values.activityDescription);
         dispatch(
             changeActivityDescription({
                 activityId: activity.id,
                 activityDescription: values.activityDescription,
             })
         );
+        setIsEditDescription(false);
+        form.reset();
+    };
+
+    const onEditDescriptionCancel = () => {
         setIsEditDescription(false);
         form.reset();
     };
@@ -105,10 +102,6 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
                                             <FormControl>
                                                 <Textarea {...field} />
                                             </FormControl>
-                                            {/* <FormDescription>
-                                                    This is your public display
-                                                    name.
-                                                </FormDescription> */}
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -119,9 +112,7 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
                                     </Button>
                                     <a
                                         className="cursor-pointer text-xl"
-                                        onClick={() =>
-                                            setIsEditDescription(false)
-                                        }
+                                        onClick={onEditDescriptionCancel}
                                     >
                                         <IoClose />
                                     </a>
@@ -130,7 +121,7 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
                         </Form>
                     ) : (
                         <DialogDescription>
-                            <span>{activity.description}</span>
+                            <p>{activity.description}</p>
                         </DialogDescription>
                     )}
                 </DialogHeader>

@@ -1,7 +1,7 @@
 'use client';
 
 import { Boards, Activity } from '@/types';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialState: Boards[] = [
@@ -50,7 +50,7 @@ export const boardsSlice = createSlice({
             const newActivity: Activity = {
                 id: uuidv4(),
                 name: activityName,
-                description: 'do zmiany potem',
+                description: '',
             };
             state
                 .find((board) => board.id === boardId)
@@ -100,18 +100,16 @@ export const boardsSlice = createSlice({
         ) => {
             const { activityId, activityDescription } = action.payload;
 
-            //cos tu nie pykło
-
-            const updatedActivities = state.map((board) => {
-                const updatedActivity = board.activities.find((activity) => {
-                    activity.id === activityId;
+            state.map((board) => {
+                const updatedActivities = board.activities.map((activity) => {
+                    if (activity.id === activityId) {
+                        activity.description = activityDescription;
+                        return activity;
+                    }
+                    return activity;
                 });
-                if (updatedActivity) {
-                    updatedActivity.description = activityDescription;
-                }
-                return board;
+                return { ...board, activities: updatedActivities };
             });
-            return updatedActivities;
         },
     },
 });
