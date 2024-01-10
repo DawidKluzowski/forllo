@@ -62,11 +62,8 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
         <Card className="min-w-[370px] bg-gray-500">
             <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
                 <CardTitle className="w-full">
-                    <BoardNameInput boards={boards} />
+                    <BoardNameInput removeTable={removeTable} boards={boards} />
                 </CardTitle>
-                <a className="cursor-pointer text-xl" onClick={removeTable}>
-                    <IoClose />
-                </a>
             </CardHeader>
             <CardContent className="w-full">
                 {boards.activities.map((activity) => (
