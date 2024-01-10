@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Boards } from '@/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { addBoard, removeBoard } from './GlobalRedux/Features/boards';
-import { RootState } from './GlobalRedux/store';
+import { addBoard, removeBoard } from '../lib/Features/boards';
+import { RootState } from '../lib/store';
 
 export default function Home() {
     const boards = useSelector((state: RootState) => state.boards);

@@ -3,7 +3,7 @@
 import {
     changeActivityDescription,
     removeActivity,
-} from '@/app/GlobalRedux/Features/boards';
+} from '@/lib/Features/boards';
 import { Activity } from '@/types';
 import { useDispatch } from 'react-redux';
 import { MdEdit } from 'react-icons/md';
