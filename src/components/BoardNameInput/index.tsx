@@ -3,7 +3,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Boards } from '@/types';
 import { useDispatch } from 'react-redux';
-import { renameBoard } from '@/app/GlobalRedux/Features/boards';
+import { renameBoard } from '@/lib/Features/boards';
 
 interface BoardNameInputProps {
     boards: Boards;

@@ -22,7 +22,7 @@ import {
     FormDescription,
     FormMessage,
 } from '../ui/form';
-import { addActivity } from '@/app/GlobalRedux/Features/boards';
+import { addActivity } from '@/lib/Features/boards';
 import { useDispatch } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
 import BoardNameInput from '../BoardNameInput';
