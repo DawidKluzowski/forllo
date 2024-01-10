@@ -4,12 +4,14 @@ import { Button } from '../ui/button';
 import { Boards } from '@/types';
 import { useDispatch } from 'react-redux';
 import { renameBoard } from '@/lib/Features/boards';
+import { IoClose } from 'react-icons/io5';
 
 interface BoardNameInputProps {
     boards: Boards;
+    removeTable: () => void;
 }
 
-const BoardNameInput = ({ boards }: BoardNameInputProps) => {
+const BoardNameInput = ({ boards, removeTable }: BoardNameInputProps) => {
     const dispatch = useDispatch();
     const [isInputEnabled, setIsInputEnabled] = useState(false);
     const [boardNameInput, setBoardNameInput] = useState(boards.name);
@@ -52,12 +54,20 @@ const BoardNameInput = ({ boards }: BoardNameInputProps) => {
                     />
                 </div>
             ) : (
-                <Button
-                    onClick={() => setIsInputEnabled(true)}
-                    className="w-full justify-start"
-                >
-                    {boards.name}
-                </Button>
+                <>
+                    <Button
+                        onClick={() => setIsInputEnabled(true)}
+                        className="relative w-full justify-start"
+                    >
+                        <p>{boards.name}</p>
+                        <a
+                            className="absolute left-[90%] z-10 cursor-pointer text-xl text-neutral-50 hover:text-red-600"
+                            onClick={removeTable}
+                        >
+                            <IoClose />
+                        </a>
+                    </Button>
+                </>
             )}
         </>
     );
