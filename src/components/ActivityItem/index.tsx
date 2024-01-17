@@ -72,13 +72,18 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="mb-2 flex w-full justify-between rounded-lg bg-gray-600 p-2 ">
-                    <h2>{activity.name}</h2>
+                <Button
+                    variant="secondary"
+                    className="group mb-2 flex w-full justify-between rounded-lg p-2 text-sm"
+                >
+                    <p className="text-xs">{activity.name}</p>
                     <a
                         onClick={() => onRemoveActivity(activity.id)}
                         className=" cursor-pointer text-xl"
                     >
-                        <MdEdit />
+                        <span className="hidden group-hover:inline">
+                            <MdEdit />
+                        </span>
                     </a>
                 </Button>
             </DialogTrigger>

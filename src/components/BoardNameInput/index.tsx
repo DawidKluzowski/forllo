@@ -59,7 +59,7 @@ const BoardNameInput = ({ boards, removeTable }: BoardNameInputProps) => {
                         onClick={() => setIsInputEnabled(true)}
                         className="relative w-full justify-start"
                     >
-                        <p>{boards.name}</p>
+                        <p className="font-bold">{boards.name}</p>
                         <a
                             className="absolute left-[90%] z-10 cursor-pointer text-xl text-neutral-50 hover:text-red-600"
                             onClick={removeTable}
