@@ -29,7 +29,7 @@ import { FaPlus } from 'react-icons/fa';
 import BoardNameInput from '../BoardNameInput';
 import ActivityItem from '../ActivityItem';
 
-interface ActivityListProps {
+interface BoardProps {
     boards: Boards;
     removeTable: () => void;
 }
@@ -38,7 +38,7 @@ const formSchema = z.object({
     activityName: z.string().min(1).max(50),
 });
 
-const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
+const Board = ({ boards, removeTable }: BoardProps) => {
     const [isEdit, setIsEdit] = useState(false);
     const dispatch = useDispatch();
     const form = useForm<z.infer<typeof formSchema>>({
@@ -131,4 +131,4 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
     );
 };
 
-export default ActivityList;
+export default Board;
