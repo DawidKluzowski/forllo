@@ -25,6 +25,7 @@ import {
 import { addActivity } from '@/lib/Features/boards';
 import { useDispatch } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
+import { FaPlus } from 'react-icons/fa';
 import BoardNameInput from '../BoardNameInput';
 import ActivityItem from '../ActivityItem';
 
@@ -59,7 +60,7 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
     };
 
     return (
-        <Card className="min-w-[370px] bg-gray-500">
+        <Card className="h-full min-w-[370px] bg-gray-500">
             <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
                 <CardTitle className="w-full">
                     <BoardNameInput removeTable={removeTable} boards={boards} />
@@ -73,10 +74,14 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
             <CardFooter>
                 {!isEdit ? (
                     <Button
-                        className="w-[340px]"
+                        className="w-[340px] "
                         onClick={() => setIsEdit(true)}
+                        variant="secondary"
                     >
-                        + Add Activity
+                        <span className="text-xs">
+                            <FaPlus />
+                        </span>
+                        <span> Add Activity</span>
                     </Button>
                 ) : (
                     <Form {...form}>
