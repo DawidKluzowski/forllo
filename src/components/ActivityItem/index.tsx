@@ -1,12 +1,8 @@
 'use client';
 
-import {
-    changeActivityDescription,
-    removeActivity,
-} from '@/lib/Features/boards';
+import { changeActivityDescription } from '@/lib/Features/boards';
 import { Activity } from '@/types';
 import { useDispatch } from 'react-redux';
-import { MdEdit } from 'react-icons/md';
 import { Button } from '../ui/button';
 import {
     Dialog,
@@ -29,13 +25,14 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IoClose } from 'react-icons/io5';
+import ActivityDropdownMenu from './ActivityDropdownMenu';
 
 interface ActivityItemProps {
     activity: Activity;
 }
 
 const formSchema = z.object({
-    activityDescription: z.string().min(1).max(50),
+    activityDescription: z.string().min(1).max(200),
 });
 
 const ActivityItem = ({ activity }: ActivityItemProps) => {
@@ -44,14 +41,6 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
-
-    const onRemoveActivity = (activityId: string) => {
-        dispatch(
-            removeActivity({
-                activityId: activityId,
-            })
-        );
-    };
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         dispatch(
@@ -77,14 +66,7 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
                     className="group mb-2 flex w-full justify-between rounded-lg p-2 text-sm"
                 >
                     <p className="text-xs">{activity.name}</p>
-                    <a
-                        onClick={() => onRemoveActivity(activity.id)}
-                        className=" cursor-pointer text-xl"
-                    >
-                        <span className="hidden group-hover:inline">
-                            <MdEdit />
-                        </span>
-                    </a>
+                    <ActivityDropdownMenu id={activity.id} />
                 </Button>
             </DialogTrigger>
             <DialogContent>
@@ -126,7 +108,7 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
                         </Form>
                     ) : (
                         <DialogDescription>
-                            <p>{activity.description}</p>
+                            {activity.description}
                         </DialogDescription>
                     )}
                 </DialogHeader>
