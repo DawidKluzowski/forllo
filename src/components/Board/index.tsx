@@ -10,7 +10,7 @@ import {
     CardTitle,
 } from '../ui/card';
 import { Input } from '../ui/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -59,6 +59,10 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
         form.reset();
     };
 
+    useEffect(() => {
+        form.setFocus('activityName');
+    }, [isEdit]);
+
     return (
         <Card className="h-full min-w-[370px] bg-gray-500">
             <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
@@ -93,6 +97,9 @@ const ActivityList = ({ boards, removeTable }: ActivityListProps) => {
                                     <FormItem>
                                         <FormControl>
                                             <Input
+                                                {...form.register(
+                                                    'activityName'
+                                                )}
                                                 className="w-[320px]"
                                                 placeholder="Name this activity"
                                                 {...field}
