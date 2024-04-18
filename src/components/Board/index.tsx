@@ -64,7 +64,7 @@ const Board = ({ boards, removeTable }: BoardProps) => {
     }, [isEdit]);
 
     return (
-        <Card className="h-full min-w-[370px] bg-gray-500">
+        <Card className="h-fit min-w-[370px] bg-gray-500">
             <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
                 <CardTitle className="w-full">
                     <BoardNameInput removeTable={removeTable} boards={boards} />
@@ -72,7 +72,11 @@ const Board = ({ boards, removeTable }: BoardProps) => {
             </CardHeader>
             <CardContent className="w-full">
                 {boards.activities.map((activity) => (
-                    <ActivityItem key={activity.id} activity={activity} />
+                    <ActivityItem
+                        name={boards.name}
+                        key={activity.id}
+                        activity={activity}
+                    />
                 ))}
             </CardContent>
             <CardFooter>

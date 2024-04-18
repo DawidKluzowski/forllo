@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useRef, useState } from 'react';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -7,6 +6,7 @@ import { Boards } from '@/types';
 import { useDispatch } from 'react-redux';
 import { renameBoard } from '@/lib/Features/boards';
 import { IoClose } from 'react-icons/io5';
+import { useClickOutsideElementHandler } from '@/hooks';
 
 interface BoardNameInputProps {
     boards: Boards;
@@ -20,23 +20,7 @@ const BoardNameInput = ({ boards, removeTable }: BoardNameInputProps) => {
     const inputRef =
         useRef<HTMLDivElement | null>() as React.MutableRefObject<HTMLInputElement>;
 
-    useEffect(() => {
-        const handleClickOutside = (evt: MouseEvent) => {
-            const inputClicked = inputRef?.current?.contains(
-                evt.target as HTMLElement
-            );
-
-            if (!inputClicked) {
-                setIsInputEnabled(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+    useClickOutsideElementHandler(inputRef, setIsInputEnabled);
 
     useEffect(() => {
         dispatch(

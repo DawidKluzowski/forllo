@@ -1,7 +1,8 @@
 'use client';
 
 import { Boards, Activity } from '@/types';
-import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { JSONContent } from '@tiptap/react';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialState: Boards[] = [
@@ -11,7 +12,7 @@ const initialState: Boards[] = [
         activities: [
             {
                 id: uuidv4(),
-                description: 'test',
+                description: undefined,
                 name: 'dupa',
             },
         ],
@@ -50,7 +51,7 @@ export const boardsSlice = createSlice({
             const newActivity: Activity = {
                 id: uuidv4(),
                 name: activityName,
-                description: '',
+                description: undefined,
             };
             state
                 .find((board) => board.id === boardId)
@@ -95,7 +96,7 @@ export const boardsSlice = createSlice({
             state,
             action: PayloadAction<{
                 activityId: string;
-                activityDescription: string;
+                activityDescription: JSONContent | undefined;
             }>
         ) => {
             const { activityId, activityDescription } = action.payload;
