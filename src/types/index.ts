@@ -1,7 +1,10 @@
+'use client';
+import { JSONContent } from '@tiptap/react';
+
 export interface Activity {
     id: string;
     name: string;
-    description: string;
+    description: JSONContent | undefined;
 }
 
 export interface Boards {

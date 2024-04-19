@@ -26,8 +26,8 @@ export default function Home() {
     };
 
     return (
-        <main className="bg-znic-300 container relative h-screen">
-            <div className="flex flex-nowrap gap-3 overflow-auto pt-8 ">
+        <main className="container relative">
+            <div className="flex h-screen flex-nowrap gap-3 overflow-auto pt-8 ">
                 {boards.map((board) => {
                     return (
                         <Board
