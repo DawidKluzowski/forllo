@@ -1,5 +1,11 @@
 'use client';
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import {
+    AnyAction,
+    Dispatch,
+    Middleware,
+    combineReducers,
+    configureStore,
+} from '@reduxjs/toolkit';
 import boards from './Features/boards';
 import { logger } from 'redux-logger';
 
@@ -9,7 +15,10 @@ const rootReducer = combineReducers({
 
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(
+            logger as Middleware<any, any, Dispatch<AnyAction>>
+        ),
     devTools: process.env.NODE_ENV !== 'production',
 });
 
