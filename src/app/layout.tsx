@@ -4,6 +4,7 @@ import { Libre_Franklin } from 'next/font/google';
 import { Providers } from './StoreProvider';
 import './globals.css';
 import { Navbar } from '@/components/Navbar';
+import { ClerkProvider } from '@clerk/nextjs';
 
 const libreFranklin = Libre_Franklin({
     subsets: ['latin'],
@@ -18,10 +19,12 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={libreFranklin.className}>
-                <Providers>
-                    <Navbar />
-                    {children}
-                </Providers>
+                <ClerkProvider>
+                    <Providers>
+                        <Navbar />
+                        {children}
+                    </Providers>
+                </ClerkProvider>
             </body>
         </html>
     );
