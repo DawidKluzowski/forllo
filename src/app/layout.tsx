@@ -5,6 +5,8 @@ import { Providers } from './StoreProvider';
 import './globals.css';
 import { Navbar } from '@/components/Navbar';
 import { ClerkProvider } from '@clerk/nextjs';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const libreFranklin = Libre_Franklin({
     subsets: ['latin'],
@@ -25,8 +27,10 @@ export default function RootLayout({
                     publishableKey={NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
                 >
                     <Providers>
-                        <Navbar />
-                        {children}
+                        <DndProvider backend={HTML5Backend}>
+                            <Navbar />
+                            {children}
+                        </DndProvider>
                     </Providers>
                 </ClerkProvider>
             </body>
