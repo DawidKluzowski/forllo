@@ -1,7 +1,7 @@
 'use client';
 
 import { Boards, Activity } from '@/types';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { JSONContent } from '@tiptap/react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -47,7 +47,6 @@ export const boardsSlice = createSlice({
             }>
         ) => {
             const { boardId, activityName } = action.payload;
-
             const newActivity: Activity = {
                 id: uuidv4(),
                 name: activityName,
@@ -112,6 +111,36 @@ export const boardsSlice = createSlice({
                 return { ...board, activities: updatedActivities };
             });
         },
+        setNewActivityIndex: (
+            state,
+            action: PayloadAction<{
+                oldBoardId: string;
+                newBoardId: string;
+                movedElement: Activity;
+                oldIndex: number;
+                newIndex: number;
+            }>
+        ) => {
+            const { newBoardId, oldBoardId, movedElement, newIndex, oldIndex } =
+                action.payload;
+
+            const oldBoard = state.find((board) => {
+                return board.id === oldBoardId;
+            });
+            console.log(current(oldBoard));
+
+            const newBoard = state.find((board) => board.id === newBoardId);
+            // const activityItem = oldBoard?.activities.find(
+            //     (activity) => activity.id === movedElement.id
+            // );
+            // console.log(current(activityItem));
+
+            if (movedElement && newBoard !== oldBoard) {
+                oldBoard?.activities.splice(oldIndex, 1);
+                newBoard?.activities.splice(newIndex, 0, movedElement);
+            }
+            // console.log(current(activityItem));
+        },
     },
 });
 
@@ -122,6 +151,7 @@ export const {
     removeActivity,
     renameBoard,
     changeActivityDescription,
+    setNewActivityIndex,
 } = boardsSlice.actions;
 
 export default boardsSlice.reducer;

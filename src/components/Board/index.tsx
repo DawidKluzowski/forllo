@@ -28,9 +28,10 @@ import { IoClose } from 'react-icons/io5';
 import { FaPlus } from 'react-icons/fa';
 import BoardNameInput from '../BoardNameInput';
 import ActivityItem from '../ActivityItem';
+import { useDroppable } from '@dnd-kit/core';
 
 interface BoardProps {
-    boards: Boards;
+    board: Boards;
     removeTable: () => void;
 }
 
@@ -38,7 +39,7 @@ const formSchema = z.object({
     activityName: z.string().min(1).max(50),
 });
 
-const Board = ({ boards, removeTable }: BoardProps) => {
+const Board = ({ board, removeTable }: BoardProps) => {
     const [isEdit, setIsEdit] = useState(false);
     const dispatch = useDispatch();
     const form = useForm<z.infer<typeof formSchema>>({
@@ -47,11 +48,17 @@ const Board = ({ boards, removeTable }: BoardProps) => {
             activityName: '',
         },
     });
+    // const { isOver, setNodeRef } = useDroppable({
+    //     id: board.id,
+    // });
+    // const style = {
+    //     color: isOver ? 'green' : undefined,
+    // };
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         dispatch(
             addActivity({
-                boardId: boards.id,
+                boardId: board.id,
                 activityName: values.activityName,
             })
         );
@@ -64,16 +71,17 @@ const Board = ({ boards, removeTable }: BoardProps) => {
     }, [isEdit]);
 
     return (
+        // <div ref={setNodeRef} style={style}>
         <Card className="h-fit min-w-[370px] bg-gray-500">
             <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
                 <CardTitle className="w-full">
-                    <BoardNameInput removeTable={removeTable} boards={boards} />
+                    <BoardNameInput removeTable={removeTable} boards={board} />
                 </CardTitle>
             </CardHeader>
             <CardContent className="w-full">
-                {boards.activities.map((activity) => (
+                {board.activities?.map((activity) => (
                     <ActivityItem
-                        name={boards.name}
+                        name={board.name}
                         key={activity.id}
                         activity={activity}
                     />
@@ -132,6 +140,7 @@ const Board = ({ boards, removeTable }: BoardProps) => {
                 )}
             </CardFooter>
         </Card>
+        // </div>
     );
 };
 
