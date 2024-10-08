@@ -13,86 +13,85 @@ import {
 import { RootState } from '../lib/store';
 import {
     DndContext,
+    DragEndEvent,
     DragOverEvent,
     DragOverlay,
     DragStartEvent,
     KeyboardSensor,
     PointerSensor,
     closestCenter,
+    closestCorners,
+    useDndMonitor,
     useSensor,
     useSensors,
 } from '@dnd-kit/core';
 import {
-    arrayMove,
     rectSortingStrategy,
     SortableContext,
     sortableKeyboardCoordinates,
-    verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
-    const [activeItem, setActiveItem] = useState<any>(null);
+    // const [activeItem, setActiveItem] = useState<any>(null);
+    const [isDragActive, setIsDragActive] = useState(false);
     const boards = useSelector((state: RootState) => state.boards);
-    // const selectedActivityItem = useSelector((state: RootState) =>
-    //     state.boards.map((board) => {
-    //         return board.activities;
-    //     })
-    // );
     const dispatch = useDispatch();
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: { delay: 100, tolerance: 10 },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
 
-    const handleDragEnd = (event: DragOverEvent) => {
+    const handleDragOver = (event: DragOverEvent) => {
         const { active, over } = event;
-
-        if (active && over) {
-            const oldBoardId = active.data.current?.sortable
-                ?.containerId as string;
-            const newBoardId = over?.data.current?.sortable
-                ?.containerId as string;
-            const oldIndex = over?.data.current?.sortable?.index;
-            const newIndex = active?.data.current?.sortable?.index;
-            const board = boards.find((board) =>
-                board.activities.find((activity) => activity.id === active.id)
-            );
-            const movedElement = board?.activities?.find(
-                (activity) => activity.id === active.id
-            );
-
-            // console.log('oooooooo');
-            // console.log(over?.data.current?.sortable);
-            // console.log('oooooooo');
-            // console.log('aaaaaaaaaa');
-            // console.log(active?.data.current?.sortable);
-            // console.log('aaaaaaaaaa');
-            console.log(movedElement);
-
-            if (movedElement) {
-                dispatch(
-                    setNewActivityIndex({
-                        newBoardId,
-                        oldBoardId,
-                        movedElement,
-                        oldIndex,
-                        newIndex,
-                    })
-                );
-            }
-        }
+        console.log('over');
     };
 
     const handleDragStart = (event: DragStartEvent) => {
+        const { active } = event;
+        console.log('start');
+
         const activeId = boards
             .map((board) => board.activities)
             .find((activities) =>
                 activities.find((activity) => activity.id === event.active.id)
             );
-        setActiveItem(activeId);
+        setIsDragActive(true);
+    };
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { over, active } = event;
+
+        const oldBoardId = active.data.current?.sortable?.containerId as string;
+        const newBoardId = over?.data.current?.sortable?.containerId as string;
+        const oldIndex = over?.data.current?.sortable?.index;
+        const newIndex = active?.data.current?.sortable?.index;
+        const board = boards.find((board) =>
+            board.activities.find((activity) => activity.id === active.id)
+        );
+        const movedElement = board?.activities?.find(
+            (activity) => activity.id === active.id
+        );
+
+        if (movedElement) {
+            dispatch(
+                setNewActivityIndex({
+                    newBoardId,
+                    oldBoardId,
+                    movedElement,
+                    oldIndex,
+                    newIndex,
+                })
+            );
+
+            setIsDragActive(false);
+        }
+        console.log('end');
+        console.log(active);
     };
 
     const onRemoveBoard = (id: string) => {
@@ -108,13 +107,17 @@ export default function Home() {
         dispatch(addBoard(newTable));
     };
 
+    console.log(isDragActive);
+
     return (
         <main className="container relative">
             <div className="flex h-screen flex-nowrap gap-3 overflow-auto pt-8 ">
                 <DndContext
+                    id="BoardsDndContext"
                     sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragOver={handleDragEnd}
+                    collisionDetection={closestCorners}
+                    onDragOver={handleDragOver}
+                    onDragEnd={handleDragEnd}
                     onDragStart={handleDragStart}
                 >
                     {boards.map((board) => {
@@ -136,9 +139,9 @@ export default function Home() {
                         + Add Table
                     </Button>
 
-                    <DragOverlay>
+                    {/* <DragOverlay>
                         {activeItem ? <div>kurwaaa penisy </div> : null}
-                    </DragOverlay>
+                    </DragOverlay> */}
                 </DndContext>
             </div>
         </main>

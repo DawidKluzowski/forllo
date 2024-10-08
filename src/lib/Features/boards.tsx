@@ -1,7 +1,7 @@
 'use client';
 
 import { Boards, Activity } from '@/types';
-import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { JSONContent } from '@tiptap/react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -33,10 +33,10 @@ export const boardsSlice = createSlice({
     name: 'boards',
     initialState,
     reducers: {
-        addBoard: (state, action: PayloadAction<Boards>) => {
+        addBoard: (state, action) => {
             state.push(action.payload);
         },
-        removeBoard: (state, action: PayloadAction<string>) => {
+        removeBoard: (state, action) => {
             return state.filter((board) => board.id !== action.payload);
         },
         addActivity: (
@@ -123,23 +123,22 @@ export const boardsSlice = createSlice({
         ) => {
             const { newBoardId, oldBoardId, movedElement, newIndex, oldIndex } =
                 action.payload;
-
             const oldBoard = state.find((board) => {
                 return board.id === oldBoardId;
             });
-            console.log(current(oldBoard));
-
             const newBoard = state.find((board) => board.id === newBoardId);
-            // const activityItem = oldBoard?.activities.find(
-            //     (activity) => activity.id === movedElement.id
-            // );
-            // console.log(current(activityItem));
 
-            if (movedElement && newBoard !== oldBoard) {
-                oldBoard?.activities.splice(oldIndex, 1);
-                newBoard?.activities.splice(newIndex, 0, movedElement);
+            if (movedElement && newBoard === oldBoard) {
+                oldBoard?.activities.splice(
+                    newIndex,
+                    0,
+                    oldBoard?.activities.splice(oldIndex, 1)[0]
+                );
             }
-            // console.log(current(activityItem));
+            if (movedElement && newBoard !== oldBoard) {
+                newBoard?.activities.splice(newIndex, 0, movedElement);
+                oldBoard?.activities.splice(oldIndex, 1);
+            }
         },
     },
 });

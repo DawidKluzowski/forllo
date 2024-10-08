@@ -12,3 +12,7 @@ export interface Boards {
     name: string;
     activities: Activity[];
 }
+
+export interface Controlls {
+    activeModalItem: string | null;
+}

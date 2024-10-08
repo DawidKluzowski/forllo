@@ -10,7 +10,6 @@ import {
 } from '../ui/dialog';
 import ActivityDropdownMenu from './ActivityDropdownMenu';
 import RichTextEditor from '../TextEditorComponent';
-import { useDraggable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -20,15 +19,6 @@ interface ActivityItemProps {
 }
 
 const ActivityItem = ({ activity, name }: ActivityItemProps) => {
-    // const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    //     id: activity.id,
-    // });
-    // const style = transform
-    //     ? {
-    //           transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    //       }
-    //     : undefined;
-
     const { attributes, listeners, setNodeRef, transform, transition } =
         useSortable({ id: activity.id });
 
