@@ -28,7 +28,8 @@ import { IoClose } from 'react-icons/io5';
 import { FaPlus } from 'react-icons/fa';
 import BoardNameInput from '../BoardNameInput';
 import ActivityItem from '../ActivityItem';
-import { useDroppable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@dnd-kit/sortable';
 
 interface BoardProps {
     board: Boards;
@@ -48,12 +49,18 @@ const Board = ({ board, removeTable }: BoardProps) => {
             activityName: '',
         },
     });
-    // const { isOver, setNodeRef } = useDroppable({
-    //     id: board.id,
-    // });
-    // const style = {
-    //     color: isOver ? 'green' : undefined,
-    // };
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({
+            id: board.id,
+            data: {
+                type: 'Board',
+            },
+        });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         dispatch(
@@ -71,76 +78,84 @@ const Board = ({ board, removeTable }: BoardProps) => {
     }, [isEdit]);
 
     return (
-        // <div ref={setNodeRef} style={style}>
-        <Card className="h-fit min-w-[370px] bg-gray-500">
-            <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
-                <CardTitle className="w-full">
-                    <BoardNameInput removeTable={removeTable} boards={board} />
-                </CardTitle>
-            </CardHeader>
-            <CardContent className="w-full">
-                {board.activities?.map((activity) => (
-                    <ActivityItem
-                        name={board.name}
-                        key={activity.id}
-                        activity={activity}
-                    />
-                ))}
-            </CardContent>
-            <CardFooter>
-                {!isEdit ? (
-                    <Button
-                        className="w-[340px] "
-                        onClick={() => setIsEdit(true)}
-                        variant="secondary"
+        <div ref={setNodeRef} style={style}>
+            <Card className="h-fit min-h-[100px] min-w-[370px] bg-gray-500">
+                <CardHeader className="flex h-20 flex-row items-center justify-between align-middle">
+                    <CardTitle
+                        className="w-full"
+                        {...listeners}
+                        {...attributes}
                     >
-                        <span className="text-xs">
-                            <FaPlus />
-                        </span>
-                        <span> Add Activity</span>
-                    </Button>
-                ) : (
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                            <FormField
-                                control={form.control}
-                                name="activityName"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Input
-                                                {...form.register(
-                                                    'activityName'
-                                                )}
-                                                className="w-[320px]"
-                                                placeholder="Name this activity"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormDescription>
-                                            This is your public display name.
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <div className="flex items-center">
-                                <Button className="mr-4" type="submit">
-                                    Add Activity
-                                </Button>
-                                <a
-                                    className="cursor-pointer text-xl"
-                                    onClick={() => setIsEdit(false)}
-                                >
-                                    <IoClose />
-                                </a>
-                            </div>
-                        </form>
-                    </Form>
-                )}
-            </CardFooter>
-        </Card>
-        // </div>
+                        <BoardNameInput
+                            removeTable={removeTable}
+                            boards={board}
+                        />
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="w-full">
+                    {board.activities?.map((activity) => (
+                        <ActivityItem
+                            name={board.name}
+                            key={activity.id}
+                            activity={activity}
+                        />
+                    ))}
+                </CardContent>
+                <CardFooter>
+                    {!isEdit ? (
+                        <Button
+                            className="w-[340px] "
+                            onClick={() => setIsEdit(true)}
+                            variant="secondary"
+                        >
+                            <span className="text-xs">
+                                <FaPlus />
+                            </span>
+                            <span> Add Activity</span>
+                        </Button>
+                    ) : (
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)}>
+                                <FormField
+                                    control={form.control}
+                                    name="activityName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    {...form.register(
+                                                        'activityName'
+                                                    )}
+                                                    className="w-[320px]"
+                                                    placeholder="Name this activity"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                This is your public display
+                                                name.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="flex items-center">
+                                    <Button className="mr-4" type="submit">
+                                        Add Activity
+                                    </Button>
+                                    <a
+                                        className="cursor-pointer text-xl"
+                                        onClick={() => setIsEdit(false)}
+                                    >
+                                        <IoClose />
+                                    </a>
+                                </div>
+                            </form>
+                        </Form>
+                    )}
+                </CardFooter>
+            </Card>
+        </div>
     );
 };
 

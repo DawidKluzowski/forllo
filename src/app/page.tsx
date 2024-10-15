@@ -9,6 +9,7 @@ import {
     addBoard,
     removeBoard,
     setNewActivityIndex,
+    setNewBoardIndex,
 } from '../lib/Features/boards';
 import { RootState } from '../lib/store';
 import {
@@ -19,9 +20,7 @@ import {
     DragStartEvent,
     KeyboardSensor,
     PointerSensor,
-    closestCenter,
     closestCorners,
-    useDndMonitor,
     useSensor,
     useSensors,
 } from '@dnd-kit/core';
@@ -30,7 +29,7 @@ import {
     SortableContext,
     sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function Home() {
     // const [activeItem, setActiveItem] = useState<any>(null);
@@ -39,12 +38,15 @@ export default function Home() {
     const dispatch = useDispatch();
     const sensors = useSensors(
         useSensor(PointerSensor, {
-            activationConstraint: { delay: 100, tolerance: 10 },
+            activationConstraint: { delay: 0, tolerance: 10 },
         }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
+    const boardsIds = boards.map((board) => {
+        return board.id;
+    });
 
     const handleDragOver = (event: DragOverEvent) => {
         const { active, over } = event;
@@ -76,8 +78,13 @@ export default function Home() {
         const movedElement = board?.activities?.find(
             (activity) => activity.id === active.id
         );
+        const activeElementType = active.data.current?.type;
+        const isOverABoard = over?.data.current?.type === 'Board';
+        const isOverActivity = over?.data.current?.type === 'Activity';
 
-        if (movedElement) {
+        if (movedElement && activeElementType === 'Activity') {
+            console.log(oldIndex);
+            console.log(newIndex);
             dispatch(
                 setNewActivityIndex({
                     newBoardId,
@@ -87,11 +94,15 @@ export default function Home() {
                     newIndex,
                 })
             );
-
-            setIsDragActive(false);
         }
-        console.log('end');
-        console.log(active);
+
+        if (activeElementType === 'Board' && isOverABoard) {
+            console.log(oldIndex);
+            console.log(newIndex);
+            // dispatch(
+            //     setNewBoardIndex({ oldBoardId, newBoardId, newIndex, oldIndex })
+            // );
+        }
     };
 
     const onRemoveBoard = (id: string) => {
@@ -107,8 +118,6 @@ export default function Home() {
         dispatch(addBoard(newTable));
     };
 
-    console.log(isDragActive);
-
     return (
         <main className="container relative">
             <div className="flex h-screen flex-nowrap gap-3 overflow-auto pt-8 ">
@@ -120,21 +129,29 @@ export default function Home() {
                     onDragEnd={handleDragEnd}
                     onDragStart={handleDragStart}
                 >
-                    {boards.map((board) => {
-                        return (
-                            <SortableContext
-                                key={board.id}
-                                items={board.activities}
-                                strategy={rectSortingStrategy}
-                                id={board.id}
-                            >
-                                <Board
-                                    removeTable={() => onRemoveBoard(board.id)}
-                                    board={board}
-                                />
-                            </SortableContext>
-                        );
-                    })}
+                    <SortableContext
+                        items={boards.map((d) => d.id)}
+                        strategy={rectSortingStrategy}
+                        id={'dupa'}
+                    >
+                        {boards.map((board) => {
+                            return (
+                                <SortableContext
+                                    key={board.id}
+                                    items={board.activities}
+                                    strategy={rectSortingStrategy}
+                                    id={board.id}
+                                >
+                                    <Board
+                                        removeTable={() =>
+                                            onRemoveBoard(board.id)
+                                        }
+                                        board={board}
+                                    />
+                                </SortableContext>
+                            );
+                        })}
+                    </SortableContext>
                     <Button className="min-w-[340px]" onClick={onAddBoard}>
                         + Add Table
                     </Button>

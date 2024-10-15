@@ -1,7 +1,7 @@
 'use client';
 
 import { Boards, Activity } from '@/types';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
 import { JSONContent } from '@tiptap/react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -128,17 +128,44 @@ export const boardsSlice = createSlice({
             });
             const newBoard = state.find((board) => board.id === newBoardId);
 
-            if (movedElement && newBoard === oldBoard) {
+            if (!oldBoard || !newBoard) return;
+
+            if (movedElement && newBoard.id === oldBoard.id) {
                 oldBoard?.activities.splice(
                     newIndex,
                     0,
                     oldBoard?.activities.splice(oldIndex, 1)[0]
                 );
-            }
-            if (movedElement && newBoard !== oldBoard) {
+            } else if (movedElement && newBoard.id !== oldBoard.id) {
                 newBoard?.activities.splice(newIndex, 0, movedElement);
-                oldBoard?.activities.splice(oldIndex, 1);
+                oldBoard.activities = oldBoard.activities.filter(
+                    (a) => a.id !== movedElement.id
+                );
             }
+        },
+        setNewBoardIndex: (
+            state,
+            action: PayloadAction<{
+                oldBoardId: string;
+                newBoardId: string;
+                newIndex: number;
+                oldIndex: number;
+            }>
+        ) => {
+            const { newBoardId, oldBoardId, newIndex, oldIndex } =
+                action.payload;
+
+            const movedElement = state.find((s) => s.id === oldBoardId);
+
+            // const asd = state.map((s) => {
+            //     return s;
+            // });
+            // console.log(current(asd));
+
+            if (!movedElement) return;
+
+            state.splice(newIndex, 0, movedElement);
+            state.filter((s) => s.id === movedElement.id);
         },
     },
 });
@@ -151,6 +178,7 @@ export const {
     renameBoard,
     changeActivityDescription,
     setNewActivityIndex,
+    setNewBoardIndex,
 } = boardsSlice.actions;
 
 export default boardsSlice.reducer;

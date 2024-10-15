@@ -20,7 +20,12 @@ interface ActivityItemProps {
 
 const ActivityItem = ({ activity, name }: ActivityItemProps) => {
     const { attributes, listeners, setNodeRef, transform, transition } =
-        useSortable({ id: activity.id });
+        useSortable({
+            id: activity.id,
+            data: {
+                type: 'Activity',
+            },
+        });
 
     const style = {
         transform: CSS.Transform.toString(transform),

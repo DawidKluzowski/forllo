@@ -15,6 +15,7 @@ interface BoardNameInputProps {
 
 const BoardNameInput = ({ boards, removeTable }: BoardNameInputProps) => {
     const dispatch = useDispatch();
+    //this useState should be outside this element or even in store to know which id is being edited
     const [isInputEnabled, setIsInputEnabled] = useState(false);
     const [boardNameInput, setBoardNameInput] = useState(boards.name);
     const inputRef =
@@ -23,6 +24,7 @@ const BoardNameInput = ({ boards, removeTable }: BoardNameInputProps) => {
     useClickOutsideElementHandler(inputRef, setIsInputEnabled);
 
     useEffect(() => {
+        //move this effect outside function to get rid of unnessesary rerenders
         dispatch(
             renameBoard({ boardId: boards.id, boardName: boardNameInput })
         );
